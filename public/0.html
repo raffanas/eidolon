@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frequência 0</title>
+  
+<link rel="stylesheet" href="/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  
+</head>
+<body>
+<div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  
+> 18 5 22 5 18 19 5
+
+<div class="gate">
+  <input id="answer" autocomplete="off" spellcheck="false" placeholder="resposta" />
+  <button id="go">→</button>
+  <p id="hint" class="hint"></p>
+</div>
+
+<script>
+(() => {
+  const NEXT = "/esrever";
+  const expected = ["reverse"];
+  const normalize = (s) => (s||"").toLowerCase().trim();
+
+  const step = sessionStorage.getItem("eidolon_step");
+  if (!step) sessionStorage.setItem("eidolon_step", "1");
+
+  const input = document.getElementById("answer");
+  const hint  = document.getElementById("hint");
+  const go    = document.getElementById("go");
+
+  const ok = () => {
+    sessionStorage.setItem("eidolon_step", "2");
+    window.location.assign(NEXT);
+  };
+  const fail = () => hint.textContent = "A ordem é a primeira mentira.";
+
+  const check = () => normalize(input.value) === expected[0] ? ok() : fail();
+
+  go.addEventListener("click", check);
+  input.addEventListener("keydown", (e)=> { if(e.key === "Enter") check(); });
+})();
+</script>
+
+
+</div>
+</body>
+</html>

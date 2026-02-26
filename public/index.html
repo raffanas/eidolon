@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocolo Eidolon</title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap"
+    rel="stylesheet">
+
+
+</head>
+
+<body>
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <img src="/eidilon.svg" alt="Eidolon Logo" style="max-width: 150px; margin-bottom: 2rem; opacity: 0.8;">
+
+    > 99% não verão nada incomum.
+    > 1% perceberá o que já estava aqui.
+
+    <div class="gate">
+      <input id="answer" autocomplete="off" spellcheck="false" placeholder="resposta" />
+      <button id="go">→</button>
+      <p id="hint" class="hint"></p>
+    </div>
+
+
+
+    <script>
+      (() => {
+        const NEXT = "/0";
+        const expected = ["zero"];
+        const normalize = (s) => (s || "")
+          .toLowerCase()
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .trim();
+
+        const input = document.getElementById("answer");
+        const hint = document.getElementById("hint");
+        const go = document.getElementById("go");
+
+        const ok = () => {
+          sessionStorage.setItem("eidolon_step", "1");
+          window.location.assign(NEXT);
+        };
+
+        const fail = () => {
+          hint.textContent = "Observe melhor.";
+          hint.style.opacity = 1;
+          setTimeout(() => hint.style.opacity = 0.55, 900);
+        };
+
+        const check = () => {
+          const v = normalize(input.value);
+          if (expected.includes(v)) ok(); else fail();
+        };
+
+        go.addEventListener("click", check);
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
+
+        // Sutil: se alguém voltar, mantém clima.
+        if (sessionStorage.getItem("eidolon_step")) {
+          hint.textContent = "Você voltou. A Frequência Zero não se esquece.";
+          hint.style.opacity = 0.65;
+        }
+      })();
+    </script>
+
+
+  </div>
+  <!-- frequencia zero -->
+</body>
+
+</html>

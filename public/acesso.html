@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01000110</title>
+  
+<link rel="stylesheet" href="/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  
+</head>
+<body>
+<div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  
+> Você não está procurando respostas.  
+> Está procurando padrões.
+
+<div class="gate">
+  <input id="answer" autocomplete="off" spellcheck="false" placeholder="resposta" />
+  <button id="go">→</button>
+  <p id="hint" class="hint"></p>
+</div>
+
+<script>
+(() => {
+  const NEXT = "/frequencia";
+  const expected = ["padroes","padrões"];
+  const normalize = (s) => (s||"")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .trim();
+
+  const input = document.getElementById("answer");
+  const hint  = document.getElementById("hint");
+  const go    = document.getElementById("go");
+
+  const ok = () => {
+    sessionStorage.setItem("eidolon_step", "6");
+    window.location.assign(NEXT);
+  };
+
+  const fail = () => hint.textContent = "O texto te distraiu. O sistema, não.";
+
+  const check = () => expected.includes(normalize(input.value)) ? ok() : fail();
+
+  go.addEventListener("click", check);
+  input.addEventListener("keydown", (e)=> { if(e.key === "Enter") check(); });
+
+  // “Atalhos” comuns:
+  if (!sessionStorage.getItem("eidolon_step")) sessionStorage.setItem("eidolon_step","1");
+})();
+</script>
+
+
+
+
+</div>
+</body>
+</html>

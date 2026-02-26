@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detectado</title>
+  
+<link rel="stylesheet" href="/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>.footer { margin-top: 32px; text-align:center; opacity:.15; font-size: 0.8rem; letter-spacing: 2px; }</style>
+</head>
+<body>
+<div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  
+> Você não foi convidado.  
+> Você foi detectado.  
+>  
+> O experimento não termina aqui.  
+> Ele apenas começou quando você decidiu continuar.
+
+<div class="gate">
+  <input id="name" autocomplete="off" spellcheck="false" placeholder="seu nome" />
+  <button id="go">Registrar →</button>
+  <p class="hint" id="hint"></p>
+</div>
+
+<p class="footer">Versão 1.0 — FZ</p>
+
+<script>
+(() => {
+  const normalizeName = (s) => (s||"").trim().replace(/\s+/g," ");
+  const input = document.getElementById("name");
+  const hint  = document.getElementById("hint");
+  const go    = document.getElementById("go");
+
+  const pushRanking = (name) => {
+    const key = "eidolon_ranking_v1";
+    const now = new Date();
+    const entry = {
+      name,
+      score: 10,
+      tag: "FZ",
+      at: now.toISOString()
+    };
+    const list = JSON.parse(localStorage.getItem(key) || "[]");
+    list.push(entry);
+    // Ordena: maior score primeiro; em empate, mais antigo primeiro.
+    list.sort((a,b) => (b.score - a.score) || (a.at.localeCompare(b.at)));
+    localStorage.setItem(key, JSON.stringify(list.slice(0, 50)));
+  };
+
+  const submit = () => {
+    const name = normalizeName(input.value);
+    if (!name || name.length < 2) {
+      hint.textContent = "Use um nome real. Ou finja melhor.";
+      return;
+    }
+    pushRanking(name);
+    sessionStorage.setItem("eidolon_name", name);
+    window.location.assign("/ranking");
+  };
+
+  go.addEventListener("click", submit);
+  input.addEventListener("keydown", (e)=> { if(e.key === "Enter") submit(); });
+})();
+</script>
+
+
+</div>
+</body>
+</html>

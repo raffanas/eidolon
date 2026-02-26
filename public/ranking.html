@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking — Frequência Zero</title>
+  
+<link rel="stylesheet" href="/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  
+<style>
+  .wrap { max-width: 980px; width: 100%; margin: 8vh auto 0; padding: 0 16px; }
+  .card { border: 1px solid var(--border); border-radius: 20px; padding: 32px; background: rgba(20,20,20,0.4); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+  .sub { opacity: 0.6; margin-top: -12px; margin-bottom: 24px; font-size: 0.9rem; }
+  .tbl { width:100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; font-size: 0.95rem; }
+  .tbl th, .tbl td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.04); text-align: left; transition: background 0.2s; }
+  .tbl tbody tr:hover td { background: rgba(255,255,255,0.02); }
+  .tbl th { color: #888; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; }
+  .actions { display:flex; gap:16px; margin-top: 32px; flex-wrap: wrap; }
+  .actions button { padding: 12px 24px; width: auto; font-size: 0.85rem; letter-spacing: 1px; }
+  .danger { color: #ff6b6b; border-color: rgba(255,107,107,0.2); background: rgba(255,107,107,0.05); }
+  .danger:hover { background: rgba(255,107,107,0.15); border-color: rgba(255,107,107,0.4); box-shadow: 0 0 15px rgba(255,107,107,0.2); }
+  .foot { margin-top: 24px; opacity: 0.15; text-align:right; font-size: 0.8rem; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+<div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  
+> Alguns passam.  
+> Alguns param.  
+> Poucos deixam nome.
+
+<div class="wrap">
+  <div class="card">
+    <h3 id="you"></h3>
+    <p class="sub">Registro local — não é um placar. É um vestígio.</p>
+    <table class="tbl" id="tbl">
+      <thead>
+        <tr><th></th><th>Nome</th><th>Pontos</th><th>Selo</th><th>Data</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <p class="foot">FZ / Eidolon / v1.0</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const key = "eidolon_ranking_v1";
+  const list = JSON.parse(localStorage.getItem(key) || "[]");
+  const tbody = document.querySelector("tbl tbody");
+  const you = document.getElementById("you");
+  const nm = sessionStorage.getItem("eidolon_name");
+
+  you.textContent = nm ? `Detectado: ${nm}` : "Detectado: (anônimo)";
+
+  const fmt = (iso) => {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString();
+    } catch { return iso; }
+  };
+
+  tbody.innerHTML = "";
+  list.slice(0, 50).forEach((e, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td>${String(e.name||"").replace(/</g,"&lt;")}</td>
+      <td>${e.score ?? 10}</td>
+      <td>${e.tag ?? "FZ"}</td>
+      <td>${fmt(e.at)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frequência</title>
+  
+<link rel="stylesheet" href="/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>.static { display:block; max-width: 780px; width: calc(100% - 32px); margin: 10vh auto 22px; border-radius: 18px; opacity:.9; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: filter 0.5s; }.static:hover { filter: contrast(1.2) brightness(1.2); } .footer { margin-top: 18px; text-align:center; opacity:.07; font-size: 0.8rem; letter-spacing: 2px; } .gate{ margin-top: 2rem; }</style>
+</head>
+<body>
+<div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  
+> Ajuste o brilho.  
+> Ou ajuste o olhar.
+
+<img class="static" alt="ruído" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='420'%3E%3Crect width='100%25' height='100%25' fill='%23070707'/%3E%3Cg opacity='.08'%3E%3Ctext x='32' y='70' fill='%23ffffff' font-size='32' font-family='Georgia'%3EOBSERVE O RODAP%C3%89%3C/text%3E%3C/g%3E%3C/svg%3E"/>
+
+<div class="gate">
+  <input id="answer" autocomplete="off" spellcheck="false" placeholder="resposta" />
+  <button id="go">→</button>
+  <p id="hint" class="hint"></p>
+</div>
+
+<p class="footer">3301 não foi o início.</p>
+
+<script>
+(() => {
+  const NEXT = "/deslocamento";
+  const expected = ["inicio","início"];
+  const normalize = (s) => (s||"")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .trim();
+
+  const input = document.getElementById("answer");
+  const hint  = document.getElementById("hint");
+  const go    = document.getElementById("go");
+
+  const ok = () => {
+    sessionStorage.setItem("eidolon_step", "8");
+    window.location.assign(NEXT);
+  };
+
+  const fail = () => hint.textContent = "A mensagem está aqui. Mas não onde você quer.";
+
+  const check = () => expected.includes(normalize(input.value)) ? ok() : fail();
+
+  go.addEventListener("click", check);
+  input.addEventListener("keydown", (e)=> { if(e.key === "Enter") check(); });
+})();
+</script>
+
+
+</div>
+</body>
+</html>

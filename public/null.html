@@ -1,0 +1,43 @@
+
+<div class="void" id="void">
+  <span class="sel">O vazio é apenas ausência de luz.</span>
+</div>
+
+<div class="gate">
+  <input id="answer" autocomplete="off" spellcheck="false" placeholder="resposta" />
+  <button id="go">→</button>
+  <p id="hint" class="hint"></p>
+</div>
+
+<!-- acesso concedido -->
+
+<script>
+(() => {
+  const NEXT = "/acesso";
+  const expected = ["acesso"];
+  const normalize = (s) => (s||"").toLowerCase().trim();
+
+  const input = document.getElementById("answer");
+  const hint  = document.getElementById("hint");
+  const go    = document.getElementById("go");
+
+  const ok = () => {
+    sessionStorage.setItem("eidolon_step", "4");
+    window.location.assign(NEXT);
+  };
+  const fail = () => hint.textContent = "O vazio requer uma chave.";
+
+  const check = () => normalize(input.value) === expected[0] ? ok() : fail();
+
+  go.addEventListener("click", check);
+  input.addEventListener("keydown", (e)=> { if(e.key === "Enter") check(); });
+})();
+</script>
+
+
+<style>
+  body { margin:0; background:#000; color:#0b0b0b; min-height: 100vh; display:flex; align-items:center; justify-content:center; }
+  .void { height:100vh; display:flex; align-items:center; justify-content:center; padding: 0 16px; width: 100%; }
+  .sel { color: #050505; user-select: text; font-family: "Outfit", sans-serif; font-size: 1.2rem; transition: color 0.3s; }
+  ::selection { background: rgba(255,255,255,.16); color:#e9e9e9; }
+</style>
